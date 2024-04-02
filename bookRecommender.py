@@ -1,3 +1,6 @@
+# imports
+import random
+
 # 오늘의 선택 페이지를 크롤링하여 책 리스트를 만드는 함수
 # name: 도서명,  writer: 저자명, data_id = 책 고유번호
 def create_bList(name, writer, data_id):
@@ -6,7 +9,7 @@ def create_bList(name, writer, data_id):
 # 오늘의 선택 책 리스트 중 추천할 1권 책을 정하는 함수
 # book_list: 책 리스트
 def choose_book(book_list):
-    pass
+    return book_list[random.randint(0, len(book_list))] 
 
 # 추천할 1권의 책의 상세 정보를 받아오는 함수
 # data_id: 책 고유번호
