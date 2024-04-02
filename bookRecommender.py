@@ -33,7 +33,6 @@ def create_bList(genre):
                 time.sleep(5)
             # 책 정보 리스트 가져오기
             bookData = driver.find_elements(By.CSS_SELECTOR, '#contents > div.switch_prod_wrap.view_type_list > ul > li')
-            print(len(bookData))
             for book in bookData:
                 # 책 추천일자 정보 가져오기
                 sDate = book.find_element(By.CSS_SELECTOR, 'div.prod_header > span > label').text
@@ -54,9 +53,30 @@ def choose_book(book_list):
     pass
 
 # 추천할 1권의 책의 상세 정보를 받아오는 함수
-# data_id: 책 고유번호
-def get_bInfo(data_id):
-    pass
+# chosen_book : 위에서 선택된 1권의 Book class
+def get_bInfo(chosen_book):
+    book_id = chosen_book.get_id()
+    
+    # 책 상세 페이지 열기
+    driver = webdriver.Chrome()
+    url = f'https://product.kyobobook.co.kr/detail/{book_id}'
+    driver.get(url)
+    
+    # 책 표지 img src 저장
+    imgTag = driver.find_element(By.CSS_SELECTOR, '#contents > div.prod_detail_header > div > div.prod_detail_view_wrap > div > div.col_prod_info.thumb > div.prod_thumb_swiper_wrap.active > div.swiper-container.prod_thumb_list_wrap.swiper-container-fade.swiper-container-horizontal > ul > li.prod_thumb_item.swiper-slide.swiper-slide-visible.swiper-slide-active > div > div.portrait_img_box.portrait > img')
+    image = imgTag.get_attribute('src')
+    
+    # 책 소개 내용 저장(소제목-내용 list 순으로 저장)
+    bTags = driver.find_elements(By.CSS_SELECTOR, '#scrollSpyProdInfo > div.product_detail_area.book_intro > div.intro_bottom')
+    bInfo = []
+    for bTag in bTags:
+        bInfo.append(bTag.text)
+    
+    # 저자 소개 내용 저장
+    wInfo = driver.find_element(By.CSS_SELECTOR, '#scrollSpyProdInfo > div.product_detail_area.product_person > div.round_gray_box > div.writer_info_box > div > div.auto_overflow_contents > div > p').text
+    
+    today_book = RecommendBook(chosen_book, bInfo, wInfo, image)
+    return today_book
 
 # 기본 책 class
 # name: 도서명, writer: 저자명, data_id: 책 고유번호
@@ -65,14 +85,24 @@ class Book:
         self.__name = name
         self.__writer = writer
         self.__id = data_id
+    
+    def get_name(self):
+        return self.__name
+    
+    def get_writer(self):
+        return self.__writer
+        
+    def get_id(self):
+        return self.__id
         
     def __str__(self):
         return f'도서명: {self.__name}, 저자: {self.__writer}'
 
 # 추천 책 class(Book class 상속)
-# info: 책 상세 정보, image: 책 표지 img src
+# bInfo(list): 책 상세 정보, wInfo: 저자 상세 정보, image: 책 표지 img src
 class RecommendBook(Book):
-    def __init__(self, info, image):
-        super().__init__
-        self.__info = info
+    def __init__(self, book, bInfo, wInfo, image):
+        super().__init__(book.get_name(), book.get_writer(), book.get_id())
+        self.__bInfo = bInfo
+        self.__wInfo = wInfo
         self.__image = image
