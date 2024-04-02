@@ -7,46 +7,50 @@ import time
 
 # 오늘의 선택 페이지를 크롤링하여 책 리스트를 만드는 함수
 # name: 도서명,  writer: 저자명, data_id = 책 고유번호
-def create_bList(genre):
-    driver = webdriver.Chrome()
-    
-    # 기간 필터링을 위한 시간 변수 설정(today: 오늘 날짜, year_ago: 1년 전 날짜)
+def getYearsBetweenOne():
     today = datetime.today()
     year_ago = datetime.now() - timedelta(days=365)
-    
-    year_list = [today.year, year_ago.year]
+
+    return [today, year_ago]
+
+def isWithinYear(element, years):
+    split_date = element.split('.')
+    bDate = datetime(int(split_date[0]), int(split_date[1]), int(split_date[2]))
+    if (bDate >= years[1]) & (bDate <= years[0]):
+        return True
+    else:
+        return False
+
+def create_bList(genre):
+    driver = webdriver.Chrome()
     bookList = []
-    for year in year_list:
-        # 2024, 2023 순서대로 페이지 열기
-        url = f'https://product.kyobobook.co.kr/today-book/KOR/{genre}#?sort=rec&year={year}&month=00'
+    for year in getYearsBetweenOne(): # [2024, 2023]
+        # url
+        url = f'https://product.kyobobook.co.kr/today-book/KOR/{genre}#?sort=rec&year={year.year}&month=00'
         driver.get(url)
+
+        # get the page numbers
+        pageList = [a for a in driver.find_elements(By.CSS_SELECTOR, '#top_pagi > div > a') if not a.get_attribute('class').endswith("hidden")]
         
-        # 실제 존재하는 페이지 번호 가져오기
-        aTags = driver.find_elements(By.CSS_SELECTOR, '#top_pagi > div > a')
-        pNumbers = []
-        for a in aTags:
-            if not a.get_attribute('class').endswith("hidden"):
-                pNumbers.append(a)
-        for p in pNumbers:
-            # 페이지 이동(첫 페이지 false로 실행 X)
+        # processing
+        for p in pageList:
+            # move page
             if (p.get_attribute('title') != '현재페이지') & (p.get_attribute('class') == 'btn_page_num'):
                 p.click()
                 time.sleep(5)
-            # 책 정보 리스트 가져오기
+            
+            # get book information list
             bookData = driver.find_elements(By.CSS_SELECTOR, '#contents > div.switch_prod_wrap.view_type_list > ul > li')
-            print(len(bookData))
+
+            # list apeend the book
             for book in bookData:
-                # 책 추천일자 정보 가져오기
-                sDate = book.find_element(By.CSS_SELECTOR, 'div.prod_header > span > label').text
-                split_date = sDate.split('.')
-                bDate = datetime(int(split_date[0]), int(split_date[1]), int(split_date[2]))
-                # 현 시점에서 1년 이내 추천일자 책인지 확인 후 책 정보 가져오기(이름, 저자, 책 고유번호)
-                if (bDate >= year_ago) & (bDate <= today):
+                if isWithinYear(book.find_element(By.CSS_SELECTOR, 'div.prod_header > span > label').text, getYearsBetweenOne()):
                     bName = book.find_element(By.CSS_SELECTOR, 'div.prod_area.horizontal > div.prod_info_box > div.auto_overflow_wrap.prod_name_group > div > div > a > span').text
                     bWriter = book.find_element(By.CSS_SELECTOR, 'div.prod_area.horizontal > div.prod_info_box > span > a').text
                     dataId = book.get_attribute('data-id')
                     bookList.append(Book(bName, bWriter, dataId))
-    # 책 리스트 반환
+                    
+    # finally
     return bookList
 
 # 오늘의 선택 책 리스트 중 추천할 1권 책을 정하는 함수
@@ -70,9 +74,6 @@ class Book:
     def __str__(self):
         return f'도서명: {self.__name}, 저자: {self.__writer}'
 
-    def __str__(self):
-        return f"이름 {self.__name}"
-
 # 추천 책 class(Book class 상속)
 # info: 책 상세 정보, image: 책 표지 img src
 class RecommendBook(Book):
@@ -85,4 +86,4 @@ class RecommendBook(Book):
         return super().__str__() + f"{self.__info}"
 
 
-print(choose_book(create_bList('01')))
+# print(choose_book(create_bList('01')))
