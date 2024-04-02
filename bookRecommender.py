@@ -12,10 +12,10 @@ def create_bList(gerne):
     today = datetime.today()
     year_ago = datetime.now() - timedelta(days=365)
     
-    year_list = [datetime.year(), datetime.year() - 1]
+    year_list = [today.year, year_ago.year]
     for year in year_list:
         # 2024, 2023 순서대로 페이지 열기
-        url = 'https://product.kyobobook.co.kr/today-book/KOR/{gerne}#?sort=rec&year={year}&month=00'
+        url = f'https://product.kyobobook.co.kr/today-book/KOR/{gerne}#?sort=rec&year={year}&month=00'
         driver = webdriver.Chrome()
         driver.get(url)
         
@@ -62,6 +62,9 @@ class Book:
         self.__name = name
         self.__writer = writer
         self.__id = data_id
+        
+    def __str__(self):
+        return f'도서명: {self.__name}, 저자: {self.__writer}'
 
     def __str__(self):
         return f"이름 {self.__name}"
