@@ -1,6 +1,9 @@
-from bookRecommender import getBook
-from bookEmail import sendEmail
-from bookFile import saveFile
+# from bookRecommender import getBook
+# from bookEmail import sendEmail
+# from bookFile import saveFile 
+from bookpkg.bookRecommender import getBook
+from bookpkg.bookEmail import sendEmail
+from bookpkg.bookFile import saveFile
 
 # init variables
 enumGenre = {'소설': '01', '시': '03', '에세이': '03', '시/에세이': '03', '인문':'05','가정':'07', '육아': '07', '가정/육아': '07',

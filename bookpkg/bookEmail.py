@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 # type
-from bookRecommender import RecommendBook
+from . import bookRecommender
 
 # smtp config
 def getServer():
@@ -30,7 +30,7 @@ def getUserPassword():
 # SMTP_USER = 'gntodtndls156@gmail.com'
 # SMTP_PASSWORD = 'geuvzzurymgtlisp'
 
-def sendEmail(to_addr, book : RecommendBook):
+def sendEmail(to_addr, book : bookRecommender.RecommendBook):
     # Email Form
     title = book.get_name()
     body = book.get_bInfo().replace('\n', '<br>')

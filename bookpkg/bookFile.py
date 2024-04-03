@@ -1,7 +1,7 @@
 # type
-from bookRecommender import RecommendBook
+from . import bookRecommender
 
-def saveFile(book: RecommendBook, inputGenre):
+def saveFile(book : bookRecommender.RecommendBook, inputGenre):
     title = book.get_name()
     writer = book.get_writer()
     body = book.get_bInfo()

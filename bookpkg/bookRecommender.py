@@ -1,5 +1,5 @@
-# 필요한 모듈 import
 import random
+# 필요한 모듈 import
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from pyshorteners import Shortener
