@@ -2,6 +2,7 @@
 import random
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from pyshorteners import Shortener
 from datetime import datetime, timedelta
 import time
 
@@ -38,7 +39,7 @@ def create_bList(genre):
             # move page
             if (p.get_attribute('title') != '현재페이지') & (p.get_attribute('class') == 'btn_page_num'):
                 p.click()
-                time.sleep(5)
+                time.sleep(1)
             
             # get book information list
             bookData = driver.find_elements(By.CSS_SELECTOR, '#contents > div.switch_prod_wrap.view_type_list > ul > li')
@@ -74,10 +75,10 @@ def get_bInfo(chosen_book):
     # 책 소개 내용 저장
     bInfo = driver.find_element(By.CSS_SELECTOR, '#scrollSpyProdInfo > div.product_detail_area.book_intro > div.intro_bottom').text
     
-    # 저자 소개 내용 저장
-    wInfo = driver.find_element(By.CSS_SELECTOR, '#scrollSpyProdInfo > div.product_detail_area.product_person > div.round_gray_box > div.writer_info_box > div > div.auto_overflow_contents > div > p').text
+    # shortUrl 생성 및 저장
+    shortUrl = Shortener().tinyurl.short(driver.current_url)
     
-    today_book = RecommendBook(chosen_book, bInfo, wInfo, image)
+    today_book = RecommendBook(chosen_book, bInfo, image)
     return today_book
 
 # 기본 책 class
@@ -98,16 +99,16 @@ class Book:
         return self.__id
         
     def __str__(self):
-        return f'도서명: {self.__name}, 저자: {self.__writer}'
+        return f'도서명: {self.__name}\n저자: {self.__writer}\n'
 
 # 추천 책 class(Book class 상속)
-# bInfo: 책 상세 정보, wInfo: 저자 상세 정보, image: 책 표지 img src
+# bInfo: 책 상세 정보, image: 책 표지 img src, shortUrl: 책 상세 정보 링크
 class RecommendBook(Book):
-    def __init__(self, book, bInfo, wInfo, image):
+    def __init__(self, book, bInfo, image, shortUrl):
         super().__init__(book.get_name(), book.get_writer(), book.get_id())
         self.__bInfo = bInfo
-        self.__wInfo = wInfo
         self.__image = image
+        self.__shortUrl = shortUrl
         
     def get_wInfo(self):
         return self.__wInfo
@@ -118,8 +119,9 @@ class RecommendBook(Book):
     def get_image(self):
         return self.__image
         
+        
     def __str__(self):
-        return super().__str__() + f'저자 정보: {self.__wInfo}\n책 소개:\n{self.__bInfo}'
+        return super().__str__() + f'책 소개:\n{self.__bInfo}\n책 상세정보: {self.__shortUrl}'
 
 # finally
 def getBook(genre):
