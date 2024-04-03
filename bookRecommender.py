@@ -128,3 +128,16 @@ class RecommendBook(Book):
 # finally
 def getBook(genre):
     return get_bInfo(choose_book(create_bList(genre)))
+
+# 추가 추천의 책
+def another_books(book_list, chosen_book):
+    plusBooks = []
+    for book in book_list:
+        if book.get_id() != chosen_book.get_id():
+            plusBooks.append(book)
+    
+    if len(plusBooks) <= 3:
+        return plusBooks
+    else:
+        return random.sample(plusBooks, 3)   
+    
