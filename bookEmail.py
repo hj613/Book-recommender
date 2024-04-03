@@ -29,7 +29,7 @@ def getUserPassword():
 def sendEmail(to_addr, book : RecommendBook):
     # Email Form
     title = book.get_name()
-    body = book.get_bInfo()
+    body = book.get_bInfo().replace('\n', '<br>')
     image = book.get_image()
     writer = book.get_writer()
     url = book.get_url()

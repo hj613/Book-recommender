@@ -43,7 +43,6 @@ try :
             sendEmail(to_addr, book)
         case '파일':
             # save file
-            to_name = input('파일 이름 : ')
-            saveFile(to_name, book)
+            saveFile(book)
 except Exception:
     print("에러가 발생했습니다")

@@ -1,13 +1,13 @@
 # type
 from bookRecommender import RecommendBook
 
-def saveFile(filename, book: RecommendBook):
+def saveFile(book: RecommendBook):
     title = book.get_name()
     writer = book.get_writer()
     body = book.get_bInfo()
     url = book.get_url()
     
-    with open(filename + '.txt', 'w', encoding='UTF-8') as f:
+    with open(title + '.txt', 'w', encoding='UTF-8') as f:
         f.writelines(f"""제목: 책 추천
 안녕하세요!
 
