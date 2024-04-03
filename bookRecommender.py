@@ -29,7 +29,7 @@ def create_bList(genre):
         # url
         url = f'https://product.kyobobook.co.kr/today-book/KOR/{genre}#?sort=rec&year={year.year}&month=00'
         driver.get(url)
-        time.sleep(3.5)
+        time.sleep(3)
 
         # get the page numbers
         pageList = [a for a in driver.find_elements(By.CSS_SELECTOR, '#top_pagi > div > a') if not a.get_attribute('class').endswith("hidden")]
@@ -39,7 +39,7 @@ def create_bList(genre):
             # move page
             if (p.get_attribute('title') != '현재페이지') & (p.get_attribute('class') == 'btn_page_num'):
                 p.click()
-                time.sleep(3)
+                time.sleep(3.5)
             
             # get book information list
             bookData = driver.find_elements(By.CSS_SELECTOR, '#contents > div.switch_prod_wrap.view_type_list > ul > li')

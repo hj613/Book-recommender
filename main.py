@@ -13,17 +13,21 @@ print([g for g in enumGenre.keys()])
 
 # input
 inputGenre = input('위의 장르 중 원하시는 책 장르를 입력하세요. (예. 시/에세이) : ')
-print('당신을 위한 책을 고르는 중입니다! 조금만 기다려주세요~')
+print('--------------------------')
+
+print('당신을 위한 책을 고르는 중입니다...')
+print('조금만 기다려 주세요!')
 
 # processing - get book
 try :
     genre = enumGenre[inputGenre] # try-exception
 except Exception:
-    print('존재하지 않거나 올바르지 않은 입력했습니다. 다시 실행해주세요')
+    print('존재하지 않거나 올바르지 않은 입력했습니다. 다시 실행해주세요.')
     exit()
 
 book = getBook(genre)
-print('책 선택 완료!')
+print('두근두근... 책 선택 완료!')
+print('--------------------------')
 
 # input
 try :
@@ -31,7 +35,7 @@ try :
     if way == '':
         raise ValueError()
 except ValueError:
-    print('입력하지 않았습니다. 다시 실행해주세요')
+    print('입력하지 않았습니다. 다시 실행해주세요.')
     exit()
 
 # save or send
@@ -43,6 +47,7 @@ try :
             sendEmail(to_addr, book)
         case '파일':
             # save file
-            saveFile(book)
-except Exception:
+            saveFile(book, inputGenre)
+except Exception as e:
     print("에러가 발생했습니다")
+    print(e)
