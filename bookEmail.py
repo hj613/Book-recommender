@@ -9,16 +9,20 @@ from bookRecommender import RecommendBook
 
 # smtp config
 def getServer():
-    return os.environ.get('SMTP_SERVER')
+    # return os.environ.get('SMTP_SERVER')
+    return 'smtp.gmail.com'
 
 def getPort():
-    return os.environ.get('SMTP_PORT')
+    # return os.environ.get('SMTP_PORT')
+    return 465
 
 def getUserEmail():
-    return os.environ.get('SMTP_USER')
+    # return os.environ.get('SMTP_USER')
+    return 'gntodtndls156@gmail.com'
 
 def getUserPassword():
-    return os.environ.get('SMTP_PASSWORD')
+    # return os.environ.get('SMTP_PASSWORD')
+    return 'geuvzzurymgtlisp'
 
 # SMTP 환경 변수
 # SMTP_SERVER = 'smtp.gmail.com'
@@ -38,7 +42,7 @@ def sendEmail(to_addr, book : RecommendBook):
     msg = MIMEMultipart()
     msg['From'] = getUserEmail()
     msg['To'] = to_addr
-    msg['Subject'] = title
+    msg['Subject'] = '[오늘의 책] ' + title
 
     msg_body = f"""
     <body style="font-family: Arial, sans-serif; background-color: #f4f4f4;">
