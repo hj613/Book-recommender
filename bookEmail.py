@@ -38,7 +38,7 @@ def sendEmail(to_addr, book : RecommendBook):
     msg = MIMEMultipart()
     msg['From'] = getUserEmail()
     msg['To'] = to_addr
-    msg['Subject'] = title
+    msg['Subject'] = '[오늘의 책]' + title
 
     msg_body = f"""
     <body style="font-family: Arial, sans-serif; background-color: #f4f4f4;">

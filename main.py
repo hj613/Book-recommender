@@ -44,5 +44,5 @@ try :
         case '파일':
             # save file
             saveFile(book)
-except Exception:
+except Exception as s:
     print("에러가 발생했습니다")
