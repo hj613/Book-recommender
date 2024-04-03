@@ -28,6 +28,7 @@ def create_bList(genre):
         # url
         url = f'https://product.kyobobook.co.kr/today-book/KOR/{genre}#?sort=rec&year={year.year}&month=00'
         driver.get(url)
+        time.sleep(5)
 
         # get the page numbers
         pageList = [a for a in driver.find_elements(By.CSS_SELECTOR, '#top_pagi > div > a') if not a.get_attribute('class').endswith("hidden")]
@@ -108,5 +109,18 @@ class RecommendBook(Book):
         self.__wInfo = wInfo
         self.__image = image
         
+    def get_wInfo(self):
+        return self.__wInfo
+    
+    def get_bInfo(self):
+        return self.__bInfo
+    
+    def get_image(self):
+        return self.__image
+        
     def __str__(self):
-        super().__str__() + f'저자 정보: {self.__wInfo}\n책 소개:\n{self.__bInfo}'
+        return super().__str__() + f'저자 정보: {self.__wInfo}\n책 소개:\n{self.__bInfo}'
+
+# finally
+def getBook(genre):
+    return get_bInfo(choose_book(create_bList(genre)))
