@@ -70,11 +70,8 @@ def get_bInfo(chosen_book):
     imgTag = driver.find_element(By.CSS_SELECTOR, '#contents > div.prod_detail_header > div > div.prod_detail_view_wrap > div > div.col_prod_info.thumb > div.prod_thumb_swiper_wrap.active > div.swiper-container.prod_thumb_list_wrap.swiper-container-fade.swiper-container-horizontal > ul > li.prod_thumb_item.swiper-slide.swiper-slide-visible.swiper-slide-active > div > div.portrait_img_box.portrait > img')
     image = imgTag.get_attribute('src')
     
-    # 책 소개 내용 저장(소제목-내용 list 순으로 저장)
-    bTags = driver.find_elements(By.CSS_SELECTOR, '#scrollSpyProdInfo > div.product_detail_area.book_intro > div.intro_bottom')
-    bInfo = []
-    for bTag in bTags:
-        bInfo.append(bTag.text)
+    # 책 소개 내용 저장
+    bInfo = driver.find_element(By.CSS_SELECTOR, '#scrollSpyProdInfo > div.product_detail_area.book_intro > div.intro_bottom').text
     
     # 저자 소개 내용 저장
     wInfo = driver.find_element(By.CSS_SELECTOR, '#scrollSpyProdInfo > div.product_detail_area.product_person > div.round_gray_box > div.writer_info_box > div > div.auto_overflow_contents > div > p').text
@@ -103,10 +100,13 @@ class Book:
         return f'도서명: {self.__name}, 저자: {self.__writer}'
 
 # 추천 책 class(Book class 상속)
-# bInfo(list): 책 상세 정보, wInfo: 저자 상세 정보, image: 책 표지 img src
+# bInfo: 책 상세 정보, wInfo: 저자 상세 정보, image: 책 표지 img src
 class RecommendBook(Book):
     def __init__(self, book, bInfo, wInfo, image):
         super().__init__(book.get_name(), book.get_writer(), book.get_id())
         self.__bInfo = bInfo
         self.__wInfo = wInfo
         self.__image = image
+        
+    def __str__(self):
+        super().__str__() + f'저자 정보: {self.__wInfo}\n책 소개:\n{self.__bInfo}'
