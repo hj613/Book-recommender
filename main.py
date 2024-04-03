@@ -60,6 +60,5 @@ try :
         case '파일':
             # save file
             saveFile(book, inputGenre)
-except Exception as e:
+except Exception:
     print("에러가 발생했습니다")
-    print(e)
