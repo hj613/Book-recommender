@@ -32,6 +32,7 @@ def sendEmail(to_addr, book : RecommendBook):
     body = book.get_bInfo()
     image = book.get_image()
     writer = book.get_writer()
+    url = book.get_url()
     
     ## content
     msg = MIMEMultipart()
@@ -49,7 +50,7 @@ def sendEmail(to_addr, book : RecommendBook):
               <h2 style="margin-top: 0;">{title}</h2>
               <p style="line-height: 1.5; color: #666;">{writer}</p>
               <p style="line-height: 1.5; color: #666;">{body}</p>
-              <p style="line-height: 1.5; color: #666;"><a href="#" style="color: #007bff; text-decoration: none;">책 링크</a></p>
+              <p style="line-height: 1.5; color: #666;"><a href="{url}" style="color: #007bff; text-decoration: none;">책 링크</a></p>
             </div>
           </div>
         </div>

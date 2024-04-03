@@ -29,7 +29,7 @@ def create_bList(genre):
         # url
         url = f'https://product.kyobobook.co.kr/today-book/KOR/{genre}#?sort=rec&year={year.year}&month=00'
         driver.get(url)
-        time.sleep(5)
+        time.sleep(3.5)
 
         # get the page numbers
         pageList = [a for a in driver.find_elements(By.CSS_SELECTOR, '#top_pagi > div > a') if not a.get_attribute('class').endswith("hidden")]
@@ -39,7 +39,7 @@ def create_bList(genre):
             # move page
             if (p.get_attribute('title') != '현재페이지') & (p.get_attribute('class') == 'btn_page_num'):
                 p.click()
-                time.sleep(1)
+                time.sleep(3)
             
             # get book information list
             bookData = driver.find_elements(By.CSS_SELECTOR, '#contents > div.switch_prod_wrap.view_type_list > ul > li')
@@ -76,9 +76,9 @@ def get_bInfo(chosen_book):
     bInfo = driver.find_element(By.CSS_SELECTOR, '#scrollSpyProdInfo > div.product_detail_area.book_intro > div.intro_bottom').text
     
     # shortUrl 생성 및 저장
-    shortUrl = Shortener().tinyurl.short(driver.current_url)
+    shortUrl = driver.current_url # Shortener().tinyurl.short(driver.current_url)
     
-    today_book = RecommendBook(chosen_book, bInfo, image)
+    today_book = RecommendBook(chosen_book, bInfo, image, shortUrl)
     return today_book
 
 # 기본 책 class
@@ -118,7 +118,9 @@ class RecommendBook(Book):
     
     def get_image(self):
         return self.__image
-        
+    
+    def get_url(self):
+        return self.__shortUrl
         
     def __str__(self):
         return super().__str__() + f'책 소개:\n{self.__bInfo}\n책 상세정보: {self.__shortUrl}'
